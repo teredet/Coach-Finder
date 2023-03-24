@@ -1,5 +1,7 @@
 <template>
-  
+  <router-view name="nav"></router-view>
+
+  <router-view></router-view>
 </template>
 
 
@@ -8,6 +10,4 @@
 </script>
 
 
-<style scoped>
-
-</style>
+<style scoped></style>

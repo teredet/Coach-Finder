@@ -1,4 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
+
+import CoachesList from './pages/CoachesList.vue';
+import TheNavbar from './UI/TheNavbar.vue';
 
 
 const router = createRouter({
@@ -11,34 +14,49 @@ const router = createRouter({
     {
       path: '/coaches',
       name: 'coaches',
-      component: null
+      components: {
+        nav: TheNavbar,
+        default: CoachesList,
+      }
     },
     {
       path: '/coaches/:id',
       name: 'coaches-id',
-      component: null,
+      components: {
+        nav: TheNavbar,
+        default: () => import('./pages/CoachDetails.vue'),        
+      },
       children: [
         {
           path: 'contact',
           name: 'contact',
-          component: null
+          components: {
+            nav: TheNavbar,
+            default: () => import('./pages/ContactCoach.vue'),        
+          }
         }
       ]
     },
     {
       path: '/register',
-      name: 'coaches-id',
-      component: null
+      name: 'register',
+      components: {
+        nav: TheNavbar,
+        default: () => import('./pages/CoachRegistration.vue'),        
+      } 
     },
     {
       path: '/requests',
       name: 'requests',
-      component: null
+      components: {
+        nav: TheNavbar,
+        default: () => import('./pages/Requests.vue'),        
+      } 
     },
     {
       path: '/:notFound(.*)',
       name: 'notFound',
-      component: null
+      component: () => import('./pages/NotFound.vue')
     }
   ]
 })
