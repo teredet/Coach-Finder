@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import CoachesList from './pages/CoachesList.vue';
-import TheHeader from './UI/TheHeader.vue';
+import TheHeader from './components/layout/TheHeader.vue';
 
 
 const router = createRouter({
@@ -13,15 +13,14 @@ const router = createRouter({
     },
     {
       path: '/coaches',
-      name: 'coaches',
       components: {
         nav: TheHeader,
         default: CoachesList,
       }
     },
     {
-      path: '/coaches/:id',
-      name: 'coaches-id',
+      path: `/coaches/:id`,
+      name: 'coaches-details',
       components: {
         nav: TheHeader,
         default: () => import('./pages/CoachDetails.vue'),        
@@ -29,7 +28,6 @@ const router = createRouter({
       children: [
         {
           path: 'contact',
-          name: 'contact',
           components: {
             nav: TheHeader,
             default: () => import('./pages/ContactCoach.vue'),        
@@ -39,7 +37,6 @@ const router = createRouter({
     },
     {
       path: '/register',
-      name: 'register',
       components: {
         nav: TheHeader,
         default: () => import('./pages/CoachRegistration.vue'),        
@@ -47,7 +44,6 @@ const router = createRouter({
     },
     {
       path: '/requests',
-      name: 'requests',
       components: {
         nav: TheHeader,
         default: () => import('./pages/RequestsReceived.vue'),        

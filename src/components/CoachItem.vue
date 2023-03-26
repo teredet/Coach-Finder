@@ -1,0 +1,57 @@
+<template>
+    <li>
+        <h3>{{ fullName }}</h3>
+        <h4>${{ coach.hourlyRate }}</h4>
+        <div>
+            <span v-for="area in coach.areas" :key="area">{{ area }}</span>
+        </div>
+        <div class="actions">
+            <router-link :to="detailsLink">Details</router-link>
+            <router-link :to="contactLink">Contact</router-link>
+        </div>
+    </li>
+</template>
+
+<script>
+export default {
+    props: ['coach'],
+    computed: {
+        fullName() {
+            return `${this.coach.firstName} ${this.coach.lastName}`
+        },
+        detailsLink() {
+            return {path: `/coaches/${this.coach.id}`}
+        },
+        contactLink() {
+            return {path: `/coaches/${this.coach.id}/contact`}
+        }
+    }
+}
+</script>
+
+<style scoped>
+li {
+  margin: 1rem 0;
+  border: 1px solid #424242;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h3,
+h4 {
+  margin: 0.5rem 0;
+}
+
+div {
+  margin: 0.5rem 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>
