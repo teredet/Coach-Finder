@@ -1,7 +1,7 @@
 <template>
   <li>
     <h3>{{ fullName }}</h3>
-    <h4>${{ coach.hourlyRate }}</h4>
+    <h4>${{ coach.hourlyRate }}/hour</h4>
     <div>
       <base-badge v-for="area in coach.areas" :key="area" :title="area" :type="area"></base-badge>
     </div>
