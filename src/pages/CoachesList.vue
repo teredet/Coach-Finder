@@ -21,16 +21,15 @@
 
 <script>
 import CoachItem from '../components/CoachItem.vue';
+import { mapGetters } from 'vuex';
 
 export default {
     components: { CoachItem },
     computed: {
-        filteredCoaches() {
-            return this.$store.getters["coaches"];
-        },
-        hasCoaches() {
-            return this.$store.getters["hasCoaches"];
-        }
+        ...mapGetters({
+            filteredCoaches: 'coaches',
+            hasCoaches: 'hasCoaches'
+        })
     },
 }
 </script>

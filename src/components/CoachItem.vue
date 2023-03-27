@@ -1,31 +1,31 @@
 <template>
-    <li>
-        <h3>{{ fullName }}</h3>
-        <h4>${{ coach.hourlyRate }}</h4>
-        <div>
-            <base-badge v-for="area in coach.areas" :key="area" :title="area" :type="area"></base-badge>
-        </div>
-        <div class="actions">
-            <base-button link mode="outline" :to="detailsLink">Details</base-button>
-            <base-button link :to="contactLink">Contact</base-button>
-        </div>
-    </li>
+  <li>
+    <h3>{{ fullName }}</h3>
+    <h4>${{ coach.hourlyRate }}</h4>
+    <div>
+      <base-badge v-for="area in coach.areas" :key="area" :title="area" :type="area"></base-badge>
+    </div>
+    <div class="actions">
+      <base-button link mode="outline" :to="detailsLink">Details</base-button>
+      <base-button link :to="contactLink">Contact</base-button>
+    </div>
+  </li>
 </template>
 
 <script>
 export default {
-    props: ['coach'],
-    computed: {
-        fullName() {
-            return `${this.coach.firstName} ${this.coach.lastName}`
-        },
-        detailsLink() {
-            return {path: `/coaches/${this.coach.id}`}
-        },
-        contactLink() {
-            return {path: `/coaches/${this.coach.id}/contact`}
-        }
+  props: ['coach'],
+  computed: {
+    fullName() {
+      return `${this.coach.firstName} ${this.coach.lastName}`
+    },
+    detailsLink() {
+      return `${this.$route.path}/${this.coach.id}`
+    },
+    contactLink() {
+      return `${this.$route.path}/${this.coach.id}/contact`
     }
+  }
 }
 </script>
 

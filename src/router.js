@@ -21,6 +21,7 @@ const router = createRouter({
     {
       path: `/coaches/:id`,
       name: 'coaches-details',
+      props: true,
       components: {
         nav: TheHeader,
         default: () => import('./pages/CoachDetails.vue'),        
