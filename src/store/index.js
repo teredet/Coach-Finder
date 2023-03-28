@@ -1,4 +1,6 @@
 import { createStore } from 'vuex';
+import { v4 as uuidv4 } from 'uuid';
+
 
 import mutations from './mutations.js'
 import actions from './actions.js'
@@ -7,6 +9,7 @@ import getters from './getters.js'
 export default createStore({
     state() {
         return {
+            userId: uuidv4(),
             coaches: [
                 {
                     id: 'ed611200-4815-49a1-9b6f-9107556e4a39',
