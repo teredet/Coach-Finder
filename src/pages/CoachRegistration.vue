@@ -3,41 +3,41 @@
         <base-card>
             <h2>Register as a coach now!</h2>
             <form @submit.prevent="submitForm">
-                <div class="form-control" :class="{ invalid: invalidInput == 'firstName' }">
+                <div class="form-control" :class="{ invalid: invalidInput.has('firstName') }">
                     <label for="firstname">Firstname</label>
-                    <input type="text" id="firstname" v-model.trim="newData.firstName" />
-                    <p v-if="invalidInput == 'firstName'">Firstname most not be empty.</p>
+                    <input type="text" id="firstname" v-model.trim="firstName" />
+                    <p v-if="invalidInput.has('firstName')">Firstname most not be empty.</p>
                 </div>
-                <div class="form-control" :class="{ invalid: invalidInput == 'lastName' }">
+                <div class="form-control" :class="{ invalid: invalidInput.has('lastName') }">
                     <label for="lastname">Lastname</label>
-                    <input type="text" id="lastname" v-model.trim="newData.lastName" />
-                    <p v-if="invalidInput == 'lastName'">Lastname most not be empty.</p>
+                    <input type="text" id="lastname" v-model.trim="lastName" />
+                    <p v-if="invalidInput.has('lastName')">Lastname most not be empty.</p>
                 </div>
-                <div class="form-control" :class="{ invalid: invalidInput == 'description' }">
+                <div class="form-control" :class="{ invalid: invalidInput.has('description') }">
                     <label for="description">Description</label>
-                    <textarea rows="5" id="description" v-model.trim="newData.description" />
-                    <p v-if="invalidInput == 'description'">Description most not be empty.</p>
+                    <textarea rows="5" id="description" v-model.trim="description" />
+                    <p v-if="invalidInput.has('description')">Description most not be empty.</p>
                 </div>
-                <div class="form-control" :class="{ invalid: invalidInput == 'hourlyRate' }">
+                <div class="form-control" :class="{ invalid: invalidInput.has('hourlyRate') }">
                     <label for="hourlyRate">Hourly Rate</label>
-                    <input type="number" id="hourlyRate" v-model.number="newData.hourlyRate" />
-                    <p v-if="invalidInput == 'hourlyRate'">Rate most be greater than 0.</p>
+                    <input type="number" id="hourlyRate" v-model.number="hourlyRate" />
+                    <p v-if="invalidInput.has('hourlyRate')">Rate most be greater than 0.</p>
                 </div>
-                <div class="form-control" :class="{ invalid: invalidInput == 'areas' }">
+                <div class="form-control" :class="{ invalid: invalidInput.has('areas') }">
                     <h3>Areas of Expertise</h3>
                     <div>
-                        <input type="checkbox" id="frontend" value="frontend" v-model="newData.areas" />
+                        <input type="checkbox" id="frontend" value="frontend" v-model="areas" />
                         <label for="frontend">Frontend Development</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="backend" value="backend" v-model="newData.areas" />
+                        <input type="checkbox" id="backend" value="backend" v-model="areas" />
                         <label for="backend">Backend Development</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="career" value="career" v-model="newData.areas" />
+                        <input type="checkbox" id="career" value="career" v-model="areas" />
                         <label for="career">Career Advisory</label>
                     </div>
-                    <p v-if="invalidInput == 'areas'">At least one areas must be selected.</p>
+                    <p v-if="invalidInput.has('areas')">At least one areas must be selected.</p>
                 </div>
                 <p v-if="!formIsValid"> Please fix your form and submit again!</p>
                 <base-button>Register</base-button>
@@ -49,22 +49,73 @@
 
 <script>
 import { mapActions } from 'vuex';
+import * as _ from 'lodash';
 
 export default {
     data() {
         return {
             formIsValid: true,
-            invalidInput: '',
-            newData: {
-                firstName: '', lastName: '', description: '', hourlyRate: null, areas: []
-            }
+            invalidInput: new Set(),
+            firstName: '', lastName: '', description: '', hourlyRate: null, areas: []
         }
+    },
+    watch: {
+        firstName() {
+            this.validateInput('firstName')
+        },
+        lastName() {
+            this.validateInput('lastName')
+        },
+        description() {
+            this.validateInput('description')
+        },
+        hourlyRate() {
+            this.validateInputNumber('hourlyRate')
+        },
+        areas() {
+            this.validateInput('areas')
+        },
     },
     methods: {
         ...mapActions(['registerCoach']),
+        validateInput(field) {
+            if (_.isEmpty(this[field])) {
+                this.formIsValid = false;
+                this.invalidInput.add(`${field}`)
+            } else {
+                this.invalidInput.delete(`${field}`)
+            }
+        },
+        validateInputNumber(field) {
+            if (!_.isNumber(this[field]) || this[field] <= 0) {
+                this.formIsValid = false;
+                this.invalidInput.add(`${field}`)
+            } else {
+                this.invalidInput.delete(`${field}`)
+            }
+        },
+        validateForm() {
+            this.formIsValid = true;
+            this.validateInput('firstName');
+            this.validateInput('lastName');
+            this.validateInput('description');
+            this.validateInputNumber('hourlyRate');
+            this.validateInput('areas')
+        },
         submitForm() {
+            this.validateForm()
+            console.log(this.invalidInput)
+            if (!_.isEmpty(this.invalidInput)) {
+                return
+            }
 
-            this.registerCoach(this.newData);
+            this.registerCoach({
+                firstName: this.firstName,
+                lastName: this.lastName,
+                description: this.description,
+                hourlyRate: this.hourlyRate,
+                areas: this.areas
+            });
             this.$router.replace('/coaches');
         }
     }
