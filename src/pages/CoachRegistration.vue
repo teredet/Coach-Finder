@@ -6,22 +6,22 @@
                 <div class="form-control" :class="{ invalid: invalidInput.has('firstName') }">
                     <label for="firstname">Firstname</label>
                     <input type="text" id="firstname" v-model.trim="firstName" />
-                    <p v-if="invalidInput.has('firstName')">Firstname most not be empty.</p>
+                    <p v-if="invalidInput.has('firstName')">Firstname must not be empty.</p>
                 </div>
                 <div class="form-control" :class="{ invalid: invalidInput.has('lastName') }">
                     <label for="lastname">Lastname</label>
                     <input type="text" id="lastname" v-model.trim="lastName" />
-                    <p v-if="invalidInput.has('lastName')">Lastname most not be empty.</p>
+                    <p v-if="invalidInput.has('lastName')">Lastname must not be empty.</p>
                 </div>
                 <div class="form-control" :class="{ invalid: invalidInput.has('description') }">
                     <label for="description">Description</label>
                     <textarea rows="5" id="description" v-model.trim="description" />
-                    <p v-if="invalidInput.has('description')">Description most not be empty.</p>
+                    <p v-if="invalidInput.has('description')">Description must not be empty.</p>
                 </div>
                 <div class="form-control" :class="{ invalid: invalidInput.has('hourlyRate') }">
                     <label for="hourlyRate">Hourly Rate</label>
                     <input type="number" id="hourlyRate" v-model.number="hourlyRate" />
-                    <p v-if="invalidInput.has('hourlyRate')">Rate most be greater than 0.</p>
+                    <p v-if="invalidInput.has('hourlyRate')">Rate must be greater than 0.</p>
                 </div>
                 <div class="form-control" :class="{ invalid: invalidInput.has('areas') }">
                     <h3>Areas of Expertise</h3>
@@ -39,7 +39,6 @@
                     </div>
                     <p v-if="invalidInput.has('areas')">At least one areas must be selected.</p>
                 </div>
-                <p v-if="!formIsValid"> Please fix your form and submit again!</p>
                 <base-button>Register</base-button>
             </form>
         </base-card>
@@ -54,33 +53,21 @@ import * as _ from 'lodash';
 export default {
     data() {
         return {
-            formIsValid: true,
             invalidInput: new Set(),
             firstName: '', lastName: '', description: '', hourlyRate: null, areas: []
         }
     },
     watch: {
-        firstName() {
-            this.validateInput('firstName')
-        },
-        lastName() {
-            this.validateInput('lastName')
-        },
-        description() {
-            this.validateInput('description')
-        },
-        hourlyRate() {
-            this.validateInputNumber('hourlyRate')
-        },
-        areas() {
-            this.validateInput('areas')
-        },
+        firstName() { this.validateInput('firstName') },
+        lastName() { this.validateInput('lastName') },
+        description() { this.validateInput('description') },
+        hourlyRate() { this.validateInputNumber('hourlyRate') },
+        areas() { this.validateInput('areas') },
     },
     methods: {
         ...mapActions(['registerCoach']),
         validateInput(field) {
             if (_.isEmpty(this[field])) {
-                this.formIsValid = false;
                 this.invalidInput.add(`${field}`)
             } else {
                 this.invalidInput.delete(`${field}`)
@@ -88,14 +75,12 @@ export default {
         },
         validateInputNumber(field) {
             if (!_.isNumber(this[field]) || this[field] <= 0) {
-                this.formIsValid = false;
                 this.invalidInput.add(`${field}`)
             } else {
                 this.invalidInput.delete(`${field}`)
             }
         },
         validateForm() {
-            this.formIsValid = true;
             this.validateInput('firstName');
             this.validateInput('lastName');
             this.validateInput('description');
@@ -104,8 +89,7 @@ export default {
         },
         submitForm() {
             this.validateForm()
-            console.log(this.invalidInput)
-            if (!_.isEmpty(this.invalidInput)) {
+            if (this.invalidInput.size > 0) {
                 return
             }
 

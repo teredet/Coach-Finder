@@ -27,7 +27,8 @@ export default createStore({
                     description: 'Man who paints buttons',
                     hourlyRate: 10
                 },
-            ]
+            ],
+            requests: []
         }
     },
     mutations,

@@ -29,10 +29,7 @@ const router = createRouter({
       children: [
         {
           path: 'contact',
-          components: {
-            nav: TheHeader,
-            default: () => import('./pages/ContactCoach.vue'),        
-          }
+          component: () => import('./pages/ContactCoach.vue')
         }
       ]
     },
