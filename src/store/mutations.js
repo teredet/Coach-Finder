@@ -4,5 +4,8 @@ export default {
     },
     addRequest(state, payload) {
         state.requests.push(payload);
-    }
+    },
+    setCoaches(state, payload) {
+        state.coaches = payload;
+    },
 };

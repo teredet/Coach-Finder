@@ -19,7 +19,7 @@
     <section>
         <base-card>
             <div class="controls">
-                <base-button mode="outline">Refresh</base-button>
+                <base-button mode="outline" @click="loadCoaches">Refresh</base-button>
                 <base-button link v-if="!isCoach" to="/register">Register as Coach</base-button>
             </div>
             <ul v-if="hasCoaches">
@@ -33,7 +33,7 @@
 
 <script>
 import CoachItem from '../components/CoachItem.vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     components: { CoachItem },
@@ -50,7 +50,11 @@ export default {
             })
         }
     },
+    created() {
+        this.loadCoaches();
+    },
     methods: {
+        ...mapActions(['loadCoaches']),
         setFilter(event) {
             const inputId = event.target.id;
             const isActive = event.target.checked;
