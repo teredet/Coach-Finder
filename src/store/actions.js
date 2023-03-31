@@ -22,25 +22,20 @@ export default {
         });
     },
     async loadCoaches(context) {
-        try {
-            const response = await axios.get(`${dbURL}/coaches.json`);
+        const response = await axios.get(`${dbURL}/coaches.json`);
 
-            if (response.status != 200) {
-                throw new Error("Data don't saved");
-            }
-
-            const coaches = [];
-            for (const key in response.data) {
-                coaches.push({
-                    id: key,
-                    ...response.data[key]
-                })
-            }
-            context.commit('setCoaches', coaches)
-        } catch (err) {
-            console.log(err);
+        if (response.status != 200) {
+            throw new Error("Data don't saved");
         }
 
+        const coaches = [];
+        for (const key in response.data) {
+            coaches.push({
+                id: key,
+                ...response.data[key]
+            })
+        }
+        context.commit('setCoaches', coaches)
     },
     addRequest(context, payload) {
         context.commit('addRequest', {

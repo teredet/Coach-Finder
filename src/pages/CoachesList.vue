@@ -20,9 +20,16 @@
         <base-card>
             <div class="controls">
                 <base-button mode="outline" @click="loadCoaches">Refresh</base-button>
-                <base-button link v-if="!isCoach" to="/register">Register as Coach</base-button>
+                <base-button link v-if="!isCoach && !isLoading" to="/register">Register as Coach</base-button>
             </div>
-            <ul v-if="hasCoaches">
+            <div v-if="isLoading">
+                <base-spinner></base-spinner>
+            </div>
+            <div v-else-if="!!error">
+                <h3>Error!</h3>
+                <h4>{{ error }}</h4>
+            </div>
+            <ul v-else-if="hasCoaches && !isLoading">
                 <coach-item v-for="coach in filteredCoaches" :key="coach.id" :coach="coach"></coach-item>
             </ul>
             <h3 v-else>No coaches found.</h3>
@@ -33,13 +40,17 @@
 
 <script>
 import CoachItem from '../components/CoachItem.vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
     components: { CoachItem },
-    data() {return{
-        filters: {frontend: true, backend: true, career: true},
-    }},
+    data() {
+        return {
+            isLoading: false,
+            error: null,
+            filters: { frontend: true, backend: true, career: true },
+        }
+    },
     computed: {
         ...mapGetters(['coaches', 'hasCoaches', 'isCoach']),
         filteredCoaches() {
@@ -54,7 +65,6 @@ export default {
         this.loadCoaches();
     },
     methods: {
-        ...mapActions(['loadCoaches']),
         setFilter(event) {
             const inputId = event.target.id;
             const isActive = event.target.checked;
@@ -64,6 +74,18 @@ export default {
             };
             this.filters = undatedFilters;
         },
+        async loadCoaches() {
+            this.isLoading = true;
+            try {
+                await this.$store.dispatch('loadCoaches');
+            } catch (err) {
+                console.log(err);
+                this.error = err.message ? err.message : "Somthing went wrong!";
+                this.isLoading = false;
+
+            }
+            this.isLoading = false;
+        }
     },
 }
 </script>
@@ -82,23 +104,27 @@ ul {
 }
 
 .filters h2 {
-  margin: 0.5rem 0;
+    margin: 0.5rem 0;
 }
 
 .filters .filter-option {
-  margin-right: 1rem;
+    margin-right: 1rem;
 }
 
 .filters .filter-option label,
 .filters .filter-option input {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 .filter-option label {
-  margin-left: 0.25rem;
+    margin-left: 0.25rem;
 }
 
 .filter-option.active label {
-  font-weight: bold;
+    font-weight: bold;
+}
+
+h3, h4 {
+    text-align: center;
 }
 </style>
