@@ -10,6 +10,7 @@ export default createStore({
     state() {
         return {
             userId: uuidv4(),
+            // userId: '363577af-de58-4e0f-ba57-780c32eba231',
             coaches: [
                 {
                     id: 'ed611200-4815-49a1-9b6f-9107556e4a39',

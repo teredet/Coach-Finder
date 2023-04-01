@@ -4,7 +4,14 @@
             <header>
                 <h3>Request Received</h3>
             </header>
-            <ul v-if="hasRequests">
+            <div v-if="isLoading">
+                <base-spinner></base-spinner>
+            </div>
+            <div v-else-if="!!error">
+                <h3>Error!</h3>
+                <h4>{{ error }}</h4>
+            </div>
+            <ul v-else-if="hasRequests">
                 <request-item v-for="req in requests" :key="req.id" :email="req.email"
                     :message="req.message"></request-item>
             </ul>
@@ -20,8 +27,31 @@ import RequestItem from '../components/RequestItem.vue';
 
 export default {
     components: { RequestItem },
+    data() {
+        return {
+            isLoading: false,
+            error: null,
+        }
+    },
+    created() {
+        this.loadRequests();
+    },
     computed: {
         ...mapGetters(['requests', 'hasRequests']),
+    },
+    methods: {
+        async loadRequests() {
+            this.isLoading = true;
+            try {
+                await this.$store.dispatch('fetchRequests');
+            } catch (err) {
+                console.log(err);
+                this.error = err.message ? err.message : "Somthing went wrong!";
+                this.isLoading = false;
+
+            }
+            this.isLoading = false;
+        }
     }
 }
 </script>
@@ -39,7 +69,7 @@ ul {
     max-width: 30rem;
 }
 
-h3 {
+h3, h4 {
     text-align: center;
 }
 </style>

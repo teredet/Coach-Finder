@@ -1,24 +1,19 @@
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 const dbURL = 'https://vue-course-d4c98-default-rtdb.europe-west1.firebasedatabase.app';
 
 export default {
     async registerCoach(context, payload) {
-        const userId = context.getters.userId;
+        const currentUserId = context.getters.userId;
 
-        try {
-            const response = await axios.put(`${dbURL}/coaches/${userId}.json`, payload);
-            if (response.status != 200) {
-                throw new Error("Data don't saved");
-            }
-        } catch (err) {
-            console.log(err);
+        const response = await axios.put(`${dbURL}/coaches/${currentUserId}.json`, payload);
+        if (response.status != 200) {
+            throw new Error("Data don't saved");
         }
 
         context.commit('registerCoach', {
             ...payload,
-            id: userId,
+            id: currentUserId,
         });
     },
     async loadCoaches(context) {
@@ -37,10 +32,36 @@ export default {
         }
         context.commit('setCoaches', coaches)
     },
-    addRequest(context, payload) {
+    async addRequest(context, payload) {
+
+        const response = await axios.post(`${dbURL}/requests/${payload.coachId}.json`, { email: payload.email, message: payload.message });
+        if (response.status != 200) {
+            throw new Error("Data don't saved");
+        }
+
         context.commit('addRequest', {
             ...payload,
-            id: uuidv4(),
+            id: response.data.name,
         });
-    }
+    },
+    async fetchRequests(context) {
+        const currentUserId = context.getters.userId;
+
+        const response = await axios.get(`${dbURL}/requests/${currentUserId}.json`);
+        if (response.status != 200) {
+            throw new Error("Data don't saved");
+        }
+        console.log(response)
+        const requests = [];
+        for (const key in response.data) {
+            requests.push({
+                id: key,
+                coachId: currentUserId,
+                ...response.data[key]
+            })
+        }
+        console.log(requests)
+
+        context.commit('setRequests', requests);
+    },
 };
