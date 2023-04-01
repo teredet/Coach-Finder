@@ -1,40 +1,42 @@
 <template>
-    <section>
-        <base-card class="filters">
-            <h2>Find your coach!</h2>
-            <span class="filter-option">
-                <input type="checkbox" id="frontend" checked @change="setFilter" />
-                <label for="frontend">Frontend</label>
-            </span>
-            <span class="filter-option">
-                <input type="checkbox" id="backend" checked @change="setFilter" />
-                <label for="backend">Backend</label>
-            </span>
-            <span class="filter-option">
-                <input type="checkbox" id="career" checked @change="setFilter" />
-                <label for="career">Career</label>
-            </span>
-        </base-card>
-    </section>
-    <section>
-        <base-card>
-            <div class="controls">
-                <base-button mode="outline" @click="loadCoaches">Refresh</base-button>
-                <base-button link v-if="!isCoach && !isLoading" to="/register">Register as Coach</base-button>
-            </div>
-            <div v-if="isLoading">
-                <base-spinner></base-spinner>
-            </div>
-            <div v-else-if="!!error">
-                <h3>Error!</h3>
-                <h4>{{ error }}</h4>
-            </div>
-            <ul v-else-if="hasCoaches && !isLoading">
-                <coach-item v-for="coach in filteredCoaches" :key="coach.id" :coach="coach"></coach-item>
-            </ul>
-            <h3 v-else>No coaches found.</h3>
-        </base-card>
-    </section>
+    <div>
+        <section>
+            <base-card class="filters">
+                <h2>Find your coach!</h2>
+                <span class="filter-option">
+                    <input type="checkbox" id="frontend" checked @change="setFilter" />
+                    <label for="frontend">Frontend</label>
+                </span>
+                <span class="filter-option">
+                    <input type="checkbox" id="backend" checked @change="setFilter" />
+                    <label for="backend">Backend</label>
+                </span>
+                <span class="filter-option">
+                    <input type="checkbox" id="career" checked @change="setFilter" />
+                    <label for="career">Career</label>
+                </span>
+            </base-card>
+        </section>
+        <section>
+            <base-card>
+                <div class="controls">
+                    <base-button mode="outline" @click="loadCoaches">Refresh</base-button>
+                    <base-button link v-if="!isCoach && !isLoading" to="/register">Register as Coach</base-button>
+                </div>
+                <div v-if="isLoading">
+                    <base-spinner></base-spinner>
+                </div>
+                <div v-else-if="!!error">
+                    <h3>Error!</h3>
+                    <h4>{{ error }}</h4>
+                </div>
+                <ul v-else-if="hasCoaches && !isLoading">
+                    <coach-item v-for="coach in filteredCoaches" :key="coach.id" :coach="coach"></coach-item>
+                </ul>
+                <h3 v-else>No coaches found.</h3>
+            </base-card>
+        </section>
+    </div>
 </template>
 
 
@@ -125,7 +127,8 @@ ul {
     font-weight: bold;
 }
 
-h3, h4 {
+h3,
+h4 {
     text-align: center;
 }
 </style>
