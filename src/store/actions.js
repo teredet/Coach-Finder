@@ -31,6 +31,7 @@ export default {
             })
         }
         context.commit('setCoaches', coaches)
+        context.commit('setFetchCoachesTime')
     },
     async addRequest(context, payload) {
 
@@ -51,7 +52,7 @@ export default {
         if (response.status != 200) {
             throw new Error("Data don't saved");
         }
-        console.log(response)
+        
         const requests = [];
         for (const key in response.data) {
             requests.push({
@@ -60,7 +61,6 @@ export default {
                 ...response.data[key]
             })
         }
-        console.log(requests)
 
         context.commit('setRequests', requests);
     },

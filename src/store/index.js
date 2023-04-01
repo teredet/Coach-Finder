@@ -29,7 +29,8 @@ export default createStore({
                     hourlyRate: 10
                 },
             ],
-            requests: []
+            requests: [],
+            lastFetchCoaches: null,
         }
     },
     mutations,

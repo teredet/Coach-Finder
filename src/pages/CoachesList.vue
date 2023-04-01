@@ -52,7 +52,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['coaches', 'hasCoaches', 'isCoach']),
+        ...mapGetters(['coaches', 'hasCoaches', 'isCoach', 'shouldUpdate']),
         filteredCoaches() {
             return this.coaches.filter(coach => {
                 for (let key in this.filters) {
@@ -62,7 +62,7 @@ export default {
         }
     },
     created() {
-        this.loadCoaches();
+        if (this.shouldUpdate) this.loadCoaches();
     },
     methods: {
         setFilter(event) {
@@ -75,6 +75,7 @@ export default {
             this.filters = undatedFilters;
         },
         async loadCoaches() {
+
             this.isLoading = true;
             try {
                 await this.$store.dispatch('loadCoaches');

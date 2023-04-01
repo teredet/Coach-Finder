@@ -11,4 +11,7 @@ export default {
     setRequests(state, payload) {
         state.requests = payload;
     },
+    setFetchCoachesTime(state) {
+        state.lastFetchCoaches = new Date().getTime();
+    }
 };
