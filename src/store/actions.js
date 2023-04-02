@@ -1,4 +1,5 @@
 import axios from 'axios';
+import keys  from '../keys.js'
 
 const dbURL = 'https://vue-course-d4c98-default-rtdb.europe-west1.firebasedatabase.app';
 
@@ -64,4 +65,22 @@ export default {
 
         context.commit('setRequests', requests);
     },
+    login() {},
+    async signup(context, payload) {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keys.googleAPIKey}`;
+        const data = {
+            email: payload.email, 
+            password: payload.password,
+            returnSecurityToken: true
+        }
+        const response = await axios.post(url, data);
+        if (response.status != 200) {
+            throw new Error("Data don't saved");
+        }
+        context.commit('setUser', {
+            token: response.data.idToken,
+            userId: response.data.localId,
+            tokenExpiration: response.data.expiresIn
+        })
+    }
 };

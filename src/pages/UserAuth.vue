@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import * as _ from 'lodash';
-
+import { mapActions } from 'vuex';
 
 export default {
     data() {
@@ -43,6 +42,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['signup', 'login']),
         validatePassword(field) {
             if (this[field].length < 6) {
                 this.invalidInput.add(`${field}`)
@@ -62,6 +62,18 @@ export default {
             this.validatePassword('password');
             if (this.invalidInput.size > 0) {
                 return
+            }
+
+            if (this.mode == 'login') {
+                this.login({
+                    email: this.email,
+                    password: this.password
+                })
+            } else {
+                this.signup({
+                    email: this.email,
+                    password: this.password
+                })
             }
         },
         switchAuthMode() {

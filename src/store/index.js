@@ -1,5 +1,4 @@
 import { createStore } from 'vuex';
-import { v4 as uuidv4 } from 'uuid';
 
 
 import mutations from './mutations.js'
@@ -9,8 +8,9 @@ import getters from './getters.js'
 export default createStore({
     state() {
         return {
-            userId: uuidv4(),
-            // userId: '363577af-de58-4e0f-ba57-780c32eba231',
+            userId: null,
+            token: null,
+            tokenExpiration: null,
             coaches: [
                 {
                     id: 'ed611200-4815-49a1-9b6f-9107556e4a39',
@@ -29,8 +29,8 @@ export default createStore({
                     hourlyRate: 10
                 },
             ],
-            requests: [],
             lastFetchCoaches: null,
+            requests: [],
         }
     },
     mutations,

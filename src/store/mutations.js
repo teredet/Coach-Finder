@@ -5,13 +5,18 @@ export default {
     setCoaches(state, payload) {
         state.coaches = payload;
     },
+    setFetchCoachesTime(state) {
+        state.lastFetchCoaches = new Date().getTime();
+    },
     addRequest(state, payload) {
         state.requests.push(payload);
     },
     setRequests(state, payload) {
         state.requests = payload;
     },
-    setFetchCoachesTime(state) {
-        state.lastFetchCoaches = new Date().getTime();
-    }
+    setUser(state, payload) {
+        state.token = payload.token;
+        state.userId = payload.userId;
+        state.tokenExpiration = payload.tokenExpiration
+    },
 };
