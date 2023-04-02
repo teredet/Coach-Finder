@@ -48,6 +48,13 @@ const router = createRouter({
       } 
     },
     {
+      path: '/auth',
+      components: {
+        nav: TheHeader,
+        default: () => import('./pages/UserAuth.vue'),        
+      } 
+    },
+    {
       path: '/:notFound(.*)',
       name: 'notFound',
       component: () => import('./pages/NotFound.vue')
