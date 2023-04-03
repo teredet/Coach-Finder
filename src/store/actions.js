@@ -65,7 +65,6 @@ export default {
 
         context.commit('setRequests', requests);
     },
-    login() {},
     async signup(context, payload) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keys.googleAPIKey}`;
         const data = {
@@ -82,5 +81,6 @@ export default {
             userId: response.data.localId,
             tokenExpiration: response.data.expiresIn
         })
-    }
+    },
+    login() {},
 };

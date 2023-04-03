@@ -1,6 +1,15 @@
 <template>
     <base-card>
-        <form @submit.prevent="submitForm">
+        <div v-if="isLoading">
+            <p>Authenticating...</p>
+            <base-spinner></base-spinner>
+        </div>
+        <div v-else-if="!!error" id="errorContainer">
+            <h3>Error!</h3>
+            <h4>{{ error }}</h4>
+            <base-button @click="error=null">Try again</base-button>
+        </div>
+        <form v-else @submit.prevent="submitForm">
             <div class="form-control" :class="{ invalid: invalidInput.has('email') }">
                 <label for="email">E-Mail</label>
                 <input type="email" id="email" v-model.trim="email" />
@@ -27,6 +36,8 @@ export default {
             password: '',
             mode: 'login',
             invalidInput: new Set(),
+            isLoading: false,
+            error: null,
         }
     },
     watch: {
@@ -57,24 +68,34 @@ export default {
                 this.invalidInput.add(`${field}`);
             }
         },
-        submitForm() {
+        async submitForm() {
             this.ValidateEmail('email');
             this.validatePassword('password');
             if (this.invalidInput.size > 0) {
                 return
             }
 
-            if (this.mode == 'login') {
-                this.login({
-                    email: this.email,
-                    password: this.password
-                })
-            } else {
-                this.signup({
-                    email: this.email,
-                    password: this.password
-                })
+            this.isLoading = true;
+
+            try {
+                if (this.mode == 'login') {
+                    await this.login({
+                        email: this.email,
+                        password: this.password
+                    })
+                } else {
+                    await this.signup({
+                        email: this.email,
+                        password: this.password
+                    })
+                }
+
+                this.$router.replace('/coaches');
+            } catch (err) {
+                this.error = err.message || 'Feiled to authenticate.'
             }
+
+            this.isLoading = false;
         },
         switchAuthMode() {
             this.mode = this.mode === 'login' ? 'signup' : 'login';
@@ -116,6 +137,9 @@ textarea:focus {
     outline: none;
 }
 
+#errorContainer {
+    text-align: center; 
+}
 
 .invalid label {
     color: red;
