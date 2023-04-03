@@ -7,7 +7,7 @@
         <div v-else-if="!!error" id="errorContainer">
             <h3>Error!</h3>
             <h4>{{ error }}</h4>
-            <base-button @click="error=null">Try again</base-button>
+            <base-button @click="error = null">Try again</base-button>
         </div>
         <form v-else @submit.prevent="submitForm">
             <div class="form-control" :class="{ invalid: invalidInput.has('email') }">
@@ -75,27 +75,26 @@ export default {
                 return
             }
 
-            this.isLoading = true;
-
             try {
+                this.isLoading = true;
+
+                const actionPayload = {
+                    email: this.email,
+                    password: this.password
+                }
+
                 if (this.mode == 'login') {
-                    await this.login({
-                        email: this.email,
-                        password: this.password
-                    })
+                    await this.login(actionPayload)
                 } else {
-                    await this.signup({
-                        email: this.email,
-                        password: this.password
-                    })
+                    await this.signup(actionPayload)
                 }
 
                 this.$router.replace('/coaches');
             } catch (err) {
                 this.error = err.message || 'Feiled to authenticate.'
+            } finally {
+                this.isLoading = false;
             }
-
-            this.isLoading = false;
         },
         switchAuthMode() {
             this.mode = this.mode === 'login' ? 'signup' : 'login';
@@ -138,7 +137,7 @@ textarea:focus {
 }
 
 #errorContainer {
-    text-align: center; 
+    text-align: center;
 }
 
 .invalid label {

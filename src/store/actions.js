@@ -82,5 +82,21 @@ export default {
             tokenExpiration: response.data.expiresIn
         })
     },
-    login() {},
+    async login(context, payload) {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${keys.googleAPIKey}`;
+        const data = {
+            email: payload.email, 
+            password: payload.password,
+            returnSecurityToken: true
+        }
+        const response = await axios.post(url, data);
+        if (response.status != 200) {
+            throw new Error("Data don't saved");
+        }
+        context.commit('setUser', {
+            token: response.data.idToken,
+            userId: response.data.localId,
+            tokenExpiration: response.data.expiresIn
+        })
+    },
 };
