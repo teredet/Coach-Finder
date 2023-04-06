@@ -6,8 +6,9 @@ const dbURL = 'https://vue-course-d4c98-default-rtdb.europe-west1.firebasedataba
 export default {
     async registerCoach(context, payload) {
         const currentUserId = context.getters.userId;
+        const token = context.getters.token;
 
-        const response = await axios.put(`${dbURL}/coaches/${currentUserId}.json`, payload);
+        const response = await axios.put(`${dbURL}/coaches/${currentUserId}.json?auth=${token}`, payload);
         if (response.status != 200) {
             throw new Error("Data don't saved");
         }
@@ -48,8 +49,9 @@ export default {
     },
     async fetchRequests(context) {
         const currentUserId = context.getters.userId;
+        const token = context.getters.token;
 
-        const response = await axios.get(`${dbURL}/requests/${currentUserId}.json`);
+        const response = await axios.get(`${dbURL}/requests/${currentUserId}.json?auth=${token}`);
         if (response.status != 200) {
             throw new Error("Data don't saved");
         }
@@ -93,6 +95,9 @@ export default {
         if (response.status != 200) {
             throw new Error("Data don't saved");
         }
+        console.log({
+            response: response
+        })
         context.commit('setUser', {
             token: response.data.idToken,
             userId: response.data.localId,

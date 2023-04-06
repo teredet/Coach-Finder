@@ -21,7 +21,7 @@
             <base-card>
                 <div class="controls">
                     <base-button mode="outline" @click="loadCoaches">Refresh</base-button>
-                    <base-button link v-if="!isCoach && !isLoading" to="/register">Register as Coach</base-button>
+                    <base-button link v-if="isAuthenticated && !isCoach && !isLoading" to="/register">Register as Coach</base-button>
                 </div>
                 <div v-if="isLoading">
                     <base-spinner></base-spinner>
@@ -54,7 +54,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['coaches', 'hasCoaches', 'isCoach', 'shouldUpdate']),
+        ...mapGetters(['coaches', 'hasCoaches', 'isCoach', 'shouldUpdate', 'isAuthenticated']),
         filteredCoaches() {
             return this.coaches.filter(coach => {
                 for (let key in this.filters) {

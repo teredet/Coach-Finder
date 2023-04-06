@@ -4,11 +4,22 @@
             <h1><router-link to="/coaches">Find a Coach</router-link></h1>
             <ul>
                 <li><router-link to="/coaches">All Coaches</router-link></li>
-                <li><router-link to="/requests">Requests</router-link></li>
+                <li v-if="isAuthenticated"><router-link to="/requests">Requests</router-link></li>
+                <li v-else><router-link to="/auth">Auth</router-link></li>
             </ul>
         </nav>
     </header>
 </template>
+
+<script>
+import { mapGetters } from 'vuex';
+
+export default {
+    computed: {
+        ...mapGetters(['isAuthenticated'])
+    }
+}
+</script>
 
 <style scoped>
 header {
