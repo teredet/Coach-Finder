@@ -68,24 +68,24 @@ export default {
         context.commit('setRequests', requests);
     },
     async signup(context, payload) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keys.googleAPIKey}`;
-        const data = {
-            email: payload.email, 
-            password: payload.password,
-            returnSecurityToken: true
-        }
-        const response = await axios.post(url, data);
-        if (response.status != 200) {
-            throw new Error("Data don't saved");
-        }
-        context.commit('setUser', {
-            token: response.data.idToken,
-            userId: response.data.localId,
-            tokenExpiration: response.data.expiresIn
-        })
+        return context.dispatch('auth', {
+            ...payload,
+            mode: 'signup'
+        });
     },
     async login(context, payload) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${keys.googleAPIKey}`;
+        return context.dispatch('auth', {
+            ...payload,
+            mode: 'login'
+        });
+    },
+    async auth(context, payload) {
+        const mode = payload.mode;
+        
+        let url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${keys.googleAPIKey}`;
+        if (mode == 'signup') {
+            url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keys.googleAPIKey}`
+        }
         const data = {
             email: payload.email, 
             password: payload.password,
@@ -95,18 +95,34 @@ export default {
         if (response.status != 200) {
             throw new Error("Data don't saved");
         }
+        console.log(response.data)
+
+        localStorage.setItem('token', response.data.idToken);
+        localStorage.setItem('userId', response.data.localId);
         
         context.commit('setUser', {
             token: response.data.idToken,
             userId: response.data.localId,
-            tokenExpiration: response.data.expiresIn
+        })
+    },
+    tryLogin(context) {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+
+        if (!token || !userId) return;
+        
+        context.commit('setUser', {
+            token: token,
+            userId: userId,
         })
     },
     logout(context) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+
         context.commit('setUser', {
             token: null,
             userId: null,
-            tokenExpiration: null
         })
     }
 };

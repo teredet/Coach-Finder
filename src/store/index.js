@@ -10,7 +10,6 @@ export default createStore({
         return {
             userId: null,
             token: null,
-            tokenExpiration: null,
             coaches: [
                 {
                     id: 'ed611200-4815-49a1-9b6f-9107556e4a39',
