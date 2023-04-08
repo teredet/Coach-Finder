@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import CoachesList from './pages/CoachesList.vue';
 import TheHeader from './components/layout/TheHeader.vue';
-
+import store from './store/index.js';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,21 +38,24 @@ const router = createRouter({
       components: {
         nav: TheHeader,
         default: () => import('./pages/CoachRegistration.vue'),        
-      } 
+      },
+      meta: {requiresAuth: true} 
     },
     {
       path: '/requests',
       components: {
         nav: TheHeader,
         default: () => import('./pages/RequestsReceived.vue'),        
-      } 
+      },
+      meta: {requiresAuth: true}  
     },
     {
       path: '/auth',
       components: {
         nav: TheHeader,
         default: () => import('./pages/UserAuth.vue'),        
-      } 
+      },
+      meta: {requiresUnauth: true} 
     },
     {
       path: '/:notFound(.*)',
@@ -60,6 +63,12 @@ const router = createRouter({
       component: () => import('./pages/NotFound.vue')
     }
   ]
+})
+
+router.beforeEach((to, _1, next) => {
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/auth');
+  else if (to.meta.requiresUnauth && store.getters.isAuthenticated) next('/coaches');
+  else next();
 })
 
 export default router;
