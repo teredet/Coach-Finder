@@ -95,13 +95,18 @@ export default {
         if (response.status != 200) {
             throw new Error("Data don't saved");
         }
-        console.log({
-            response: response
-        })
+        
         context.commit('setUser', {
             token: response.data.idToken,
             userId: response.data.localId,
             tokenExpiration: response.data.expiresIn
         })
     },
+    logout(context) {
+        context.commit('setUser', {
+            token: null,
+            userId: null,
+            tokenExpiration: null
+        })
+    }
 };
