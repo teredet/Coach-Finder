@@ -28,3 +28,7 @@ coverage
 *.sw?
 
 keys.js
+
+.firebase
+.firebaserc
+firebase.json
